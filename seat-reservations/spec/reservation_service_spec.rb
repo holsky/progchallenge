@@ -8,6 +8,10 @@ describe ReservationService do
     service.reset
   end
 
+  after(:all) do
+    service.reset
+  end 
+
   describe "#reserve" do
     subject { service.reserve(2) }
 
