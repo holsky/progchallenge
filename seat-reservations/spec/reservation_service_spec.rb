@@ -8,11 +8,13 @@ class ReservationServiceTest < Test::Unit::TestCase
   end
 
   def test_reserving_seats_in_empty_carriage
+    @service.reset
     reserved_seat_numbers = @service.reserve(2)
     assert_equal [1,2], reserved_seat_numbers
   end
 
   def test_reserving_seats_in_non_empty_carriage
+    @service.reset
     @service.reserve(1)
     reserved_seat_numbers = @service.reserve(2)
 
@@ -20,10 +22,12 @@ class ReservationServiceTest < Test::Unit::TestCase
   end
 
   def test_listing_when_no_reservations
+    @service.reset
     assert_equal [], @service.list_reserved()
   end
 
   def test_listing_reservations
+    @service.reset
     @service.reserve(1)
     @service.reserve(3)
 
