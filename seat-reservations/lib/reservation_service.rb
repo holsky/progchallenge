@@ -4,17 +4,18 @@ class ReservationService
 
   def initialize
     @store = Store.new
-
   end
 
   def reserve(num_seats)
-    new_seats = seats
-
+    old_seats = seats
+    
+    newly_reserved_seats = []
     num_seats.times do |i|
-      new_seats << (new_seats.last.to_i + 1)
+      newly_reserved_seats << (old_seats.last.to_i + 1 + i)
     end
 
-    @store.write(seats)
+    @store.write(old_seats + newly_reserved_seats) # was ist der rückgabewert?
+    newly_reserved_seats
   end
 
   def list_reserved

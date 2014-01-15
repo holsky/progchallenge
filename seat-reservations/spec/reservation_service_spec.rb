@@ -1,37 +1,46 @@
-require "test/unit"
 require "./lib/reservation_service"
 
-class ReservationServiceTest < Test::Unit::TestCase
+describe ReservationService do
+  let(:service) { ReservationService.new }
+  
 
-  def setup
-    @service = ReservationService.new
+  before do
+    service.reset
   end
 
-  def test_reserving_seats_in_empty_carriage
-    @service.reset
-    reserved_seat_numbers = @service.reserve(2)
-    assert_equal [1,2], reserved_seat_numbers
+  describe "#reserve" do
+    subject { service.reserve(2) }
+
+    it "should reserve the first seats in an empty carriage" do    
+      subject.should == [1,2]
+    end
+
+    context "first seat is already reserved" do
+      before do
+        service.reserve(1)
+      end
+
+      it "should reserve consecutive seats" do 
+        subject.should == [2,3]
+      end  
+    end
   end
 
-  def test_reserving_seats_in_non_empty_carriage
-    @service.reset
-    @service.reserve(1)
-    reserved_seat_numbers = @service.reserve(2)
+  describe "#list_reserved" do
+    subject { service.list_reserved }
+    it "should return an empty list with no reservations" do
+      subject.should == []
+    end
 
-    assert_equal [1,2,3], reserved_seat_numbers
+    context "there are reserved seats" do
+      before do
+        service.reserve(1)
+        service.reserve(3)
+      end
+
+      it "should list the reservations" do
+        subject.should == [1,2,3,4]
+      end
+    end
   end
-
-  def test_listing_when_no_reservations
-    @service.reset
-    assert_equal [], @service.list_reserved()
-  end
-
-  def test_listing_reservations
-    @service.reset
-    @service.reserve(1)
-    @service.reserve(3)
-
-    assert_equal [1,2,3,4], @service.list_reserved()
-  end
-
 end
